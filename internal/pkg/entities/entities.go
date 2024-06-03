@@ -3,6 +3,7 @@ package entities
 import "time"
 
 type JWT struct {
+	User  string
 	Token string
 }
 

@@ -20,7 +20,7 @@ var userTable = "public.user"
 
 // public.user fields
 var (
-	userIdField      = "public.user.id"
+	userIdField      = "public.user.id_user"
 	userNameField    = "public.user.name"
 	userSurnameField = "public.user.surname"
 	userEmailField   = "public.user.email"

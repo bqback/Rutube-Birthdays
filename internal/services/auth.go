@@ -7,6 +7,6 @@ import (
 )
 
 type IAuthService interface {
-	Auth(context.Context, dto.LoginInfo) (*dto.DBUser, error)
-	Register(context.Context, dto.SignupInfo) (*entities.User, error)
+	Auth(context.Context, dto.LoginInfo) (*entities.JWT, error)
+	Register(context.Context, dto.SignupInfo) (*dto.SignupResponse, error)
 }

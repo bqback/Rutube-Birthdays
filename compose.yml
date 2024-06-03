@@ -15,7 +15,10 @@ services:
       db:
         condition: service_healthy
     command: >
-        sh -c "echo 'Starting birthday server' &&
+        sh -c "echo 'Migrating main database' &&
+              ./tern migrate -c db/migrations/public/tern.conf -m db/migrations/public/ &&
+              echo 'Finished main database migrations' &&
+              echo 'Starting birthday server' &&
               ./birthday"
   
   db:

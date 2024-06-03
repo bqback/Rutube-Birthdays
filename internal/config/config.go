@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	yaml "gopkg.in/yaml.v3"
@@ -15,6 +16,7 @@ type Config struct {
 	HttpLogging *HttpLoggingConfig `yaml:"http_logging"`
 	Logging     *LoggingConfig     `yaml:"logging"`
 	Database    *DatabaseConfig    `yaml:"db"`
+	JWT         *JWTConfig         `yaml:"jwt"`
 }
 
 type AppConfig struct {
@@ -52,6 +54,12 @@ type DatabaseConfig struct {
 	ConnectionTimeout uint64 `yaml:"connection_timeout"`
 }
 
+type JWTConfig struct {
+	Secret          string        `yaml:"-"`
+	LifetimeSeconds uint          `yaml:"lifetime_seconds"`
+	Lifetime        time.Duration `yaml:"-"`
+}
+
 var loggingLevels = map[string]slog.Level{
 	"debug": slog.LevelDebug,
 	"info":  slog.LevelInfo,
@@ -86,12 +94,12 @@ func LoadConfig(configPath, envPath string) (*Config, error) {
 		return nil, apperrors.ErrEnvNotFound
 	}
 
-	config.Database.Password, err = GetDBPassword()
+	config.Database.Password, err = getDBPassword()
 	if err != nil {
 		return nil, err
 	}
 
-	config.Database.Host = GetDBConnectionHost()
+	config.Database.Host = getDBConnectionHost()
 
 	level, ok := loggingLevels[config.HttpLogging.level]
 	if !ok {
@@ -99,14 +107,20 @@ func LoadConfig(configPath, envPath string) (*Config, error) {
 	}
 	config.HttpLogging.Level = level
 
+	config.JWT.Secret, err = getJWTSecret()
+	if err != nil {
+		return nil, err
+	}
+	config.JWT.Lifetime = time.Duration(config.JWT.LifetimeSeconds) * time.Second
+
 	config.App.Version = fmt.Sprintf("v%f", config.App.version)
 
 	return &config, err
 }
 
-// GetDBConnectionHost
+// getDBConnectionHost
 // возвращает имя хоста из env для соединения с БД (по умолчанию localhost)
-func GetDBConnectionHost() string {
+func getDBConnectionHost() string {
 	host, hOk := os.LookupEnv("POSTGRES_HOST")
 	if !hOk {
 		return "localhost"
@@ -116,10 +130,18 @@ func GetDBConnectionHost() string {
 
 // getDBConnectionHost
 // возвращает пароль из env для соединения с БД
-func GetDBPassword() (string, error) {
+func getDBPassword() (string, error) {
 	pwd, pOk := os.LookupEnv("POSTGRES_PASSWORD")
 	if !pOk {
 		return "", apperrors.ErrDatabasePWMissing
 	}
 	return pwd, nil
+}
+
+func getJWTSecret() (string, error) {
+	name, nOk := os.LookupEnv("JWT_SECRET")
+	if !nOk {
+		return "", apperrors.ErrJWTSecretMissing
+	}
+	return name, nil
 }

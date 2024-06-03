@@ -1,9 +1,12 @@
 package dto
 
-import "time"
+import (
+	"birthdays/internal/pkg/entities"
+	"time"
+)
 
 type LoginInfo struct {
-	Login    string `json:"login"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
@@ -13,9 +16,19 @@ type DBUser struct {
 	PasswordHash string
 }
 
+type TokenInfo struct {
+	ID       uint64
+	Username string
+}
+
 type SignupInfo struct {
-	Login    string    `json:"login"`
+	Username string    `json:"username"`
 	Password string    `json:"password"`
 	Email    string    `json:"email" validate:"email"`
 	DOB      time.Time `json:"dob" validate:"datetime"`
+}
+
+type SignupResponse struct {
+	Token string
+	entities.User
 }

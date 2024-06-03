@@ -34,7 +34,7 @@ func (s *PgAuthStorage) Auth(ctx context.Context, info dto.LoginInfo) (*dto.DBUs
 	query, args, err := squirrel.
 		Select(authLoginSelectFields...).
 		From(authTable).
-		Where(squirrel.Eq{authLoginField: info.Login}).
+		Where(squirrel.Eq{authLoginField: info.Username}).
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
@@ -80,7 +80,7 @@ func (s *PgAuthStorage) Register(ctx context.Context, info dto.SignupInfo) (*ent
 	query1, args, err := squirrel.
 		Insert(authTable).
 		Columns(authSignupInsertFields...).
-		Values(info.Login, info.Password).
+		Values(info.Username, info.Password).
 		PlaceholderFormat(squirrel.Dollar).
 		Suffix(returningIDSuffix).
 		ToSql()

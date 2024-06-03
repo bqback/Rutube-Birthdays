@@ -1,6 +1,7 @@
 package main
 
 import (
+	"birthdays/internal/auth"
 	"birthdays/internal/config"
 	"birthdays/internal/handlers"
 	"birthdays/internal/logging"
@@ -41,8 +42,10 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	authManager := auth.NewManager(config.JWT)
+
 	storages := storages.NewPostgresStorages(db)
-	services := services.NewServices(storages)
+	services := services.NewServices(storages, authManager)
 	handlers := handlers.NewHandlers(services)
 
 	mux, err := mux.SetUpMux(handlers, loggers.HTTP)

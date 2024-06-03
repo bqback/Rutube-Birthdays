@@ -9,6 +9,13 @@ var (
 var (
 	ErrEnvNotFound       = errors.New("couldn't open .env file at provided path")
 	ErrDatabasePWMissing = errors.New("database PW is missing from .env")
+	ErrJWTSecretMissing  = errors.New("JWT secret is missing from .env")
+)
+
+var (
+	ErrCouldNotParseClaims = errors.New("couldn't parse JWT claims")
+	ErrTokenExpired        = errors.New("JWT expired")
+	ErrInvalidIssuedTime   = errors.New("invalid IAT in the JWT")
 )
 
 var (

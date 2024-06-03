@@ -1,6 +1,7 @@
 package services
 
 import (
+	"birthdays/internal/auth"
 	"birthdays/internal/services/monolith"
 	"birthdays/internal/storages"
 )
@@ -10,9 +11,9 @@ type Services struct {
 	User IUserService
 }
 
-func NewServices(storages *storages.Storages) *Services {
+func NewServices(storages *storages.Storages, manager *auth.AuthManager) *Services {
 	return &Services{
-		Auth: monolith.NewAuthService(storages.Auth),
+		Auth: monolith.NewAuthJWTService(storages.Auth, manager),
 		User: monolith.NewUserService(storages.User),
 	}
 }

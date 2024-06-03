@@ -17,11 +17,13 @@
 2. Добавить туда следующий текст
 
 ```
+MIGRATOR_USER="postgres"
 MIGRATOR_PASSWORD="postgres"
 POSTGRES_USER="postgres"
 POSTGRES_PASSWORD="postgres"
 POSTGRES_DB="BirthdayStorage"
 POSTGRES_HOST="birthday-db"
+JWT_SECRET="На ваше усмотрение :)"
 ```
 
 3. Поднять докер
