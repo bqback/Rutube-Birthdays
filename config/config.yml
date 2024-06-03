@@ -1,0 +1,38 @@
+app:
+  version: 1.0
+  port: 8080
+
+logging:
+  # Accepted levels: trace, debug, info, warning, error
+  level: debug
+  disable_timestamp: false
+  full_timestamp: true
+  # If true, report_caller setting will be based on level being trace
+  # If false, report_caller setting will use the config value
+  level_based_report: true
+  report_caller: true
+  disable_level_truncation: true
+
+http_logging:
+  # Accepted levels: debug, info, warn, error
+  level: debug
+  # Set true to output logs in a JSON format
+  # Set false to prettyprint logs and stacktraces to stdout
+  json_logs: false
+  # Set false to include request content length, headers etc
+  # Set true to omit
+  concise_logs: true
+  # Set true to enable non-sensitive request headers in logs
+  # Set false to omit
+  include_request_headers: false
+  # Set true to enable response headers in logs
+  # Set false to omit
+  include_response_headers: false
+
+db:
+  user: postgres
+  port: 5432
+  db_name: BirthdayStorage
+  app_name: BirthdayStorage
+  schema: public
+  connection_timeout: 5
