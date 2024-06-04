@@ -51,3 +51,59 @@ func (s *PgUserStorage) GetAll(ctx context.Context) ([]*entities.User, error) {
 
 	return users, nil
 }
+
+func (s *PgUserStorage) Subscribe(ctx context.Context, source uint64, id uint64) error {
+	httplog.LogEntrySetField(ctx, dto.StepKey, slog.StringValue(step))
+	httplog.LogEntrySetField(ctx, dto.FuncKey, slog.StringValue("Subscribe"))
+	oplog := httplog.LogEntry(ctx)
+
+	query, args, err := squirrel.
+		Insert(notificationTable).
+		Columns(notificationsFields...).
+		Values(source, id).
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		oplog.Debug("Failed to build query", "err", err.Error())
+		return apperrors.ErrCouldNotBuildQuery
+	}
+	oplog.Debug("Query built")
+
+	_, err = s.db.Exec(query, args...)
+	if err != nil {
+		oplog.Debug("Notification subscription insert failed", "err", err.Error())
+		return apperrors.ErrSubscriptionNotCreated
+	}
+	oplog.Debug("Subscribed to birthday")
+
+	return nil
+}
+
+func (s *PgUserStorage) Unsubscribe(ctx context.Context, source uint64, id uint64) error {
+	httplog.LogEntrySetField(ctx, dto.StepKey, slog.StringValue(step))
+	httplog.LogEntrySetField(ctx, dto.FuncKey, slog.StringValue("Unsubscribe"))
+	oplog := httplog.LogEntry(ctx)
+
+	query, args, err := squirrel.
+		Delete(notificationTable).
+		Where(squirrel.And{
+			squirrel.Eq{idSourceField: source},
+			squirrel.Eq{idSubscriberField: id},
+		}).
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		oplog.Debug("Failed to build query", "err", err.Error())
+		return apperrors.ErrCouldNotBuildQuery
+	}
+	oplog.Debug("Query built")
+
+	_, err = s.db.Exec(query, args...)
+	if err != nil {
+		oplog.Debug("Notification subscription delete failed", "err", err.Error())
+		return apperrors.ErrSubscriptionNotDeleted
+	}
+	oplog.Debug("Unsubscribed from birthday")
+
+	return nil
+}

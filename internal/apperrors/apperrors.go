@@ -33,7 +33,13 @@ var (
 )
 
 var (
+	ErrSubscriptionNotCreated = errors.New("failed to subscribe to birthday")
+	ErrSubscriptionNotDeleted = errors.New("failed to unsubscribe from birthday")
+)
+
+var (
 	ErrNilContext      = errors.New("context is nil")
 	ErrUserIDMissing   = errors.New("user ID is missing from context")
 	ErrUsernameMissing = errors.New("username is missing from context")
+	ErrParamMissing    = errors.New("one or more required parameters are missing from context")
 )

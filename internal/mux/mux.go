@@ -24,6 +24,7 @@ func SetUpMux(manager *handlers.Handlers, logger *httplog.Logger) (http.Handler,
 			r.Use(mw.AuthJWTMiddleware(manager.AuthHandler.GetAuthService()))
 			r.Get("/", manager.UserHandler.GetAll)
 			r.Route("/{id}", func(r chi.Router) {
+				r.Use(mw.IDFromUrl)
 				r.Post("/subscribe", manager.UserHandler.Subscribe)
 				r.Post("/unsubscribe", manager.UserHandler.Unsubscribe)
 			})

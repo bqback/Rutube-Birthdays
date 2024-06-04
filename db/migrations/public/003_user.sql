@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS public.user
 (
-    id_user int NOT NULL,
+    id_user int UNIQUE NOT NULL,
     name text NOT NULL DEFAULT '',
     surname text NOT NULL DEFAULT '',
     email text NOT NULL,

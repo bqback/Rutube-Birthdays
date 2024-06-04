@@ -47,3 +47,15 @@ var (
 	newUserInsertFields  = []string{userIdField, userEmailField, userDOBField}
 	userFullSelectFields = []string{userIdField, userNameField, userSurnameField, userEmailField, userDOBField}
 )
+
+var notificationTable = "public.notifications"
+
+// internal public.notifications fields
+var (
+	idSourceField     = "id_source"
+	idSubscriberField = "id_subscriber"
+)
+
+var (
+	notificationsFields = []string{idSourceField, idSubscriberField}
+)
