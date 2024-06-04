@@ -1,3 +1,10 @@
 package storages
 
-type IUserStorage interface{}
+import (
+	"birthdays/internal/pkg/entities"
+	"context"
+)
+
+type IUserStorage interface {
+	GetAll(context.Context) ([]*entities.User, error)
+}

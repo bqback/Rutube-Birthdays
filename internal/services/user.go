@@ -1,3 +1,10 @@
 package services
 
-type IUserService interface{}
+import (
+	"birthdays/internal/pkg/entities"
+	"context"
+)
+
+type IUserService interface {
+	GetAll(context.Context) ([]*entities.User, error)
+}
