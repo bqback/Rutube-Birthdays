@@ -16,9 +16,9 @@ import (
 	"os/signal"
 	"time"
 
-	"log"
+	"github.com/go-co-op/gocron/v2"
 
-	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 const envPath = "config/.env"
@@ -36,9 +36,6 @@ const configPath = "config/config.yml"
 // @securityDefinitions.apikey  JWT
 // @in header
 // @name "Authorization"
-
-// @externalDocs.description  OpenAPI
-// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	config, err := config.LoadConfig(configPath, envPath)
 	if err != nil {
@@ -58,9 +55,10 @@ func main() {
 	}
 
 	authManager := auth.NewManager(config.JWT)
+	scheduler, _ := gocron.NewScheduler()
 
 	storages := storages.NewPostgresStorages(db)
-	services := services.NewServices(storages, authManager)
+	services := services.NewServices(storages, authManager, scheduler)
 	handlers := handlers.NewHandlers(services)
 
 	mux, err := mux.SetUpMux(handlers, logger)

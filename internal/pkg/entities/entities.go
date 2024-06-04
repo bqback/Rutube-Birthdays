@@ -14,3 +14,9 @@ type User struct {
 	Email   string
 	DOB     time.Time
 }
+
+type Job struct {
+	Date       time.Time
+	SourceID   uint64
+	SourceName string
+}
