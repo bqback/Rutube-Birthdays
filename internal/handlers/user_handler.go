@@ -17,6 +17,20 @@ type UserHandler struct {
 	us services.IUserService
 }
 
+// @Summary Получить список пользователей
+// @Description
+// @Tags Пользователи
+//
+// @Produce  json
+//
+// @Security JWT
+//
+// @Success 200 {object} []entities.User
+// @Failure 400  {object}  httputil.HTTPError
+// @Failure 401  {object}  httputil.HTTPError
+// @Failure 500  {object}  httputil.HTTPError
+//
+// @Router /auth/signup [post]
 func (uh *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -28,10 +42,12 @@ func (uh *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	case nil:
 		break
 	case apperrors.ErrNilContext:
+		httplog.LogEntry(ctx).Error("nil context")
 		RespondError(http.StatusInternalServerError, w, ctx)
 		r.Body.Close()
 		return
 	default:
+		httplog.LogEntry(ctx).Error("User unauthorized")
 		RespondError(http.StatusUnauthorized, w, ctx)
 		r.Body.Close()
 		return

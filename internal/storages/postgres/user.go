@@ -29,7 +29,7 @@ func (s *PgUserStorage) GetAll(ctx context.Context) ([]*entities.User, error) {
 
 	query, args, err := squirrel.
 		Select(userFullSelectFields...).
-		From(authTable).
+		From(userTable).
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {

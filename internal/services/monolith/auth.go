@@ -92,3 +92,7 @@ func (s *AuthJWTService) Register(ctx context.Context, info dto.SignupInfo) (*dt
 
 	return response, nil
 }
+
+func (s *AuthJWTService) Validate(token string) (*dto.TokenInfo, error) {
+	return s.manager.ValidateToken(token)
+}

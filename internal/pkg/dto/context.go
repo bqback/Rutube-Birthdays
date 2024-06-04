@@ -1,8 +1,6 @@
 package dto
 
 const (
-	StepKey   string = "step"
-	FuncKey   string = "func"
-	UserKey   string = "user"
-	UserIDKey string = "userID"
+	CtxUserKey Key = iota
+	CtxUserIDKey
 )

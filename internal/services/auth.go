@@ -9,4 +9,5 @@ import (
 type IAuthService interface {
 	Auth(context.Context, dto.LoginInfo) (*entities.JWT, error)
 	Register(context.Context, dto.SignupInfo) (*dto.SignupResponse, error)
+	Validate(string) (*dto.TokenInfo, error)
 }

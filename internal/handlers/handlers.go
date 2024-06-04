@@ -38,9 +38,7 @@ func NewUserHandler(us services.IUserService) *UserHandler {
 }
 
 func RespondError(code int, w http.ResponseWriter, ctx context.Context) {
-	httplog.LogEntrySetFields(ctx, map[string]interface{}{
-		dto.FuncKey: slog.StringValue("RespondError"),
-	})
+	httplog.LogEntrySetField(ctx, dto.FuncKey, slog.StringValue("RespondError"))
 	oplog := httplog.LogEntry(ctx)
 
 	w.WriteHeader(code)

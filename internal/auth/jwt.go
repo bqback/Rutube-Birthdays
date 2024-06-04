@@ -38,7 +38,9 @@ func (am *AuthManager) GenerateToken(user *dto.TokenInfo) (string, error) {
 	return token.SignedString(am.secret)
 }
 
-func (am *AuthManager) ValidateToken(token string) error {
+func (am *AuthManager) ValidateToken(token string) (*dto.TokenInfo, error) {
+	var info *dto.TokenInfo
+
 	parsedToken, err := jwt.ParseWithClaims(
 		token,
 		&jwtClaim{},
@@ -47,19 +49,24 @@ func (am *AuthManager) ValidateToken(token string) error {
 		},
 	)
 	if err != nil {
-		return err
+		return info, err
 	}
 
 	claims, ok := parsedToken.Claims.(*jwtClaim)
 	if !ok {
-		return apperrors.ErrCouldNotParseClaims
+		return info, apperrors.ErrCouldNotParseClaims
 	}
 	if claims.ExpiresAt.Before(time.Now().Local()) {
-		return apperrors.ErrTokenExpired
+		return info, apperrors.ErrTokenExpired
 	}
 	if claims.IssuedAt.After(time.Now().Local()) {
-		return apperrors.ErrInvalidIssuedTime
+		return info, apperrors.ErrInvalidIssuedTime
 	}
 
-	return nil
+	info = &dto.TokenInfo{
+		ID:       claims.ID,
+		Username: claims.Username,
+	}
+
+	return info, nil
 }

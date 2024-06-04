@@ -8,7 +8,7 @@ type JWT struct {
 }
 
 type User struct {
-	ID      uint64
+	ID      uint64 `db:"id_user"`
 	Name    string
 	Surname string
 	Email   string

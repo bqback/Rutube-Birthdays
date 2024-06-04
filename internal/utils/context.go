@@ -15,10 +15,10 @@ func GetUserFromContext(ctx context.Context) (uint64, string, error) {
 	var username string
 	var ok bool
 
-	if id, ok = ctx.Value(dto.UserIDKey).(uint64); !ok {
+	if id, ok = ctx.Value(dto.CtxUserIDKey).(uint64); !ok {
 		return id, username, apperrors.ErrUserIDMissing
 	}
-	if username, ok = ctx.Value(dto.UserKey).(string); !ok {
+	if username, ok = ctx.Value(dto.CtxUserKey).(string); !ok {
 		return id, username, apperrors.ErrUsernameMissing
 	}
 

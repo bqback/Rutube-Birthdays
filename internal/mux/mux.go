@@ -21,7 +21,7 @@ func SetUpMux(manager *handlers.Handlers, logger *httplog.Logger) (http.Handler,
 			r.Post("/signup", manager.AuthHandler.Signup)
 		})
 		r.Route("/user", func(r chi.Router) {
-			r.Use(mw.AuthMiddleware(manager.AuthHandler.GetAuthService()))
+			r.Use(mw.AuthJWTMiddleware(manager.AuthHandler.GetAuthService()))
 			r.Get("/", manager.UserHandler.GetAll)
 			r.Route("/{id}", func(r chi.Router) {
 				r.Post("/subscribe", manager.UserHandler.Subscribe)

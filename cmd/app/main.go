@@ -24,6 +24,21 @@ import (
 const envPath = "config/.env"
 const configPath = "config/config.yml"
 
+// @title           Rutube Birthdays
+// @version         1.0
+// @description     Тестовое задание: Бэкенд-сервер для учёта дней рождения
+
+// @contact.name   Никита Архаров
+
+// @host      localhost:8080
+// @BasePath  /
+
+// @securityDefinitions.apikey  JWT
+// @in header
+// @name "Authorization"
+
+// @externalDocs.description  OpenAPI
+// @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	config, err := config.LoadConfig(configPath, envPath)
 	if err != nil {
