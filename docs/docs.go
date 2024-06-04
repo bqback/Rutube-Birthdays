@@ -10,7 +10,8 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "contact": {
-            "name": "Никита Архаров"
+            "name": "Никита Архаров",
+            "email": "lolwut-lol@yandex.ru"
         },
         "version": "{{.Version}}"
     },
@@ -270,8 +271,6 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "Тестовое задание: Бэкенд-сервер для учёта дней рождения",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
-	LeftDelim:        "{{",
-	RightDelim:       "}}",
 }
 
 func init() {

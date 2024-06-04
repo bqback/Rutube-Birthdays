@@ -4,7 +4,8 @@
         "description": "Тестовое задание: Бэкенд-сервер для учёта дней рождения",
         "title": "Rutube Birthdays",
         "contact": {
-            "name": "Никита Архаров"
+            "name": "Никита Архаров",
+            "email": "lolwut-lol@yandex.ru"
         },
         "version": "1.0"
     },

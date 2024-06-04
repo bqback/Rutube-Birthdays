@@ -34,6 +34,7 @@ definitions:
 host: localhost:8080
 info:
   contact:
+    email: lolwut-lol@yandex.ru
     name: Никита Архаров
   description: 'Тестовое задание: Бэкенд-сервер для учёта дней рождения'
   title: Rutube Birthdays
