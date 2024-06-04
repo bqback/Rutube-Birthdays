@@ -44,8 +44,10 @@ var (
 )
 
 var (
-	newUserInsertFields  = []string{userIdField, userEmailField, userDOBField}
-	userFullSelectFields = []string{userIdField, userNameField, userSurnameField, userEmailField, userDOBField}
+	newUserInsertFields      = []string{userIdField, userEmailField, userDOBField}
+	userFullSelectFields     = []string{userIdField, userNameField, userSurnameField, userEmailField, userDOBField}
+	userJobSelectFields      = []string{userIdField, userNameField, userSurnameField, userDOBField}
+	userJobEmailSelectFields = []string{userEmailField}
 )
 
 var notificationTable = "public.notifications"

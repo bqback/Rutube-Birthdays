@@ -6,6 +6,7 @@ import (
 	"birthdays/internal/handlers"
 	"birthdays/internal/logging"
 	"birthdays/internal/mux"
+	"birthdays/internal/pkg/dto"
 	"birthdays/internal/services"
 	"birthdays/internal/storages"
 	postgresql "birthdays/internal/storages/postgres"
@@ -60,6 +61,16 @@ func main() {
 	storages := storages.NewPostgresStorages(db)
 	services := services.NewServices(storages, authManager, scheduler)
 	handlers := handlers.NewHandlers(services)
+
+	jobContext := context.Background()
+	go func(ctx context.Context) {
+		ctx = context.WithValue(ctx, dto.CtxLoggerKey, logger.Logger)
+		err := services.Job.Gather(ctx)
+		if err != nil {
+			log.Print(err.Error())
+		}
+		services.Job.Start()
+	}(jobContext)
 
 	mux, err := mux.SetUpMux(handlers, logger)
 	if err != nil {

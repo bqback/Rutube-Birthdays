@@ -4,4 +4,5 @@ const (
 	CtxUserKey Key = iota
 	CtxUserIDKey
 	CtxIDParamKey
+	CtxLoggerKey
 )

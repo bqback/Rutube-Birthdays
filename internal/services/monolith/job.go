@@ -3,6 +3,7 @@ package monolith
 import (
 	"birthdays/internal/pkg/dto"
 	"birthdays/internal/storages"
+	"birthdays/internal/utils"
 	"context"
 	"log/slog"
 	"time"
@@ -24,20 +25,24 @@ func NewJobService(storage storages.IJobStorage, scheduler gocron.Scheduler) *Jo
 }
 
 func (s *JobService) Gather(ctx context.Context) error {
-	httplog.LogEntrySetField(ctx, dto.StepKey, slog.StringValue(step))
-	httplog.LogEntrySetField(ctx, dto.FuncKey, slog.StringValue("Gather"))
-	oplog := httplog.LogEntry(ctx)
+	logger, err := utils.GetLogger(ctx)
+	if err != nil {
+		return err
+	}
 
-	var err error
+	currentYear := time.Now().Year()
 
 	jobs, err := s.storage.GetAll(ctx)
 	if err != nil {
-		oplog.Error("Error getting jobs", "err", err.Error())
+		logger.Error("Error getting jobs", "err", err.Error())
 		return err
 	}
 
 	for _, job := range jobs {
 		httplog.LogEntrySetField(ctx, dto.UserIDKey, slog.Uint64Value(job.SourceID))
+		startDate := job.Date.AddDate(currentYear-job.Date.Year(), 0, 0)
+		logger.Info("Job would've started at date", "date", startDate.String())
+		startDate = time.Now().Add(15 * time.Second)
 		_, err = s.scheduler.NewJob(
 			gocron.DurationJob(
 				// Для дней рождения интервал был бы год -- time.Year,
@@ -47,20 +52,28 @@ func (s *JobService) Gather(ctx context.Context) error {
 				func() {
 					emails, err := s.storage.GetRecipientEmails(ctx, job.SourceID)
 					if err != nil {
-						oplog.Error("Error getting recipient emails", "err", err.Error())
+						logger.Error("Error getting recipient emails", "err", err.Error())
 						return
 					}
 					for _, email := range emails {
 						// При полноценной реализации здесь будет какое-то отправление
-						oplog.Info("Sending reminder", "email", email)
+						logger.Info("Sending reminder", "email", email)
 					}
 				},
+			),
+			gocron.WithStartAt(
+				gocron.WithStartDateTime(startDate),
 			),
 		)
 
 		if err != nil {
-			oplog.Error("Error scheduling job for source ID", dto.UserIDKey, job.SourceID, "err", err.Error())
+			logger.Error("Error scheduling job for source ID", dto.UserIDKey, job.SourceID, "err", err.Error())
 		}
 	}
-	return err
+
+	return nil
+}
+
+func (s *JobService) Start() {
+	s.scheduler.Start()
 }

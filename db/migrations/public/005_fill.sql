@@ -1,0 +1,82 @@
+INSERT INTO public.auth
+    (username, password_hash)
+VALUES
+    ---- mike0: 100000 ----
+    ('mike0', '$2a$16$7t0ExwCrIZy8yDk5zItsqu2P3mImkuhf8sef5LisL8RMdu88UV1gy'),
+    ('mike1', '$2a$16$QqWXpUmlq/OsR.JHRsZ48OKOXRL.EKhTeetUn0YQzh851aC2yjP9a'),
+    ('mike2', '$2a$16$.Qrx55ztD1H8oyDz/Cq4X.VLZHDP4s4iIhCvVEeko407n6Nd.x0MW'),
+    ('mike3', '$2a$16$06jE4079n1o0EGmqXCBgvuV1p4Baj2VmllcQE3.G/DHgy9bF32tKy'),
+    ('mike4', '$2a$16$Vj8GW2gZaPgDMYdGjFfuP./qxO7Hp/JTmmQhjt7smb87C2md4dwcG'),
+    ('mike5', '$2a$16$QPOBa7uv1PRC10ee.bhBqu1ncXSiwofatlHn7IsAVzIO4YQbLmIcm'),
+    ('mike6', '$2a$16$tBNxTP7.PRihN8qTnMLcRORBAGExqs.zVUmFaezFHU.0hl0Y4jkiO'),
+    ('mike7', '$2a$16$8nZ6DX9aoTolgsK7hixzu.VsP/QHTz.ipo3AhqqGb.Py2a6i/D8dW'),
+    ('mike8', '$2a$16$qSWa.pAMPfanM2PS0qA4o.8qCY53oLEHFnxTEG0tNb/xsUn1qx762');
+
+INSERT INTO public.user
+    (id_user, name, surname, email , dob)
+VALUES
+    (1, 'Егор', 'Романов', 'test0@email.com', '2024-03-01'),
+    (2, 'Александр', 'Соловьёв', 'test1@email.com', '2023-07-02'),
+    (3, 'Станислав', 'Измайлов', 'test2@email.com', '2023-11-06'),
+    (4, 'Иван', 'Кузнецов', 'test3@email.com', '2024-04-26'),
+    (5, 'Илья', 'Фролов', 'test4@email.com', '2023-08-26'),
+    (6, 'Ярослава', 'Розанова', 'test5@email.com', '2023-12-10'),
+    (7, 'Александра', 'Ковалёва', 'test6@email.com', '2023-06-10'),
+    (8, 'Екатерина', 'Андреева', 'test7@email.com', '2023-09-12'),
+    (9, 'Аиша', 'Жданова', 'test8@email.com', '2024-05-08');
+
+INSERT INTO public.notifications
+    (id_source, id_subscriber)
+VALUES
+    (3, 4),
+    (3, 1),
+    (4, 9),
+    (3, 7),
+    (4, 6),
+    (9, 2),
+    (5, 7),
+    (9, 5),
+    (8, 3),
+    (8, 9),
+    (8, 6),
+    (1, 6),
+    (2, 5),
+    (1, 3),
+    (1, 9),
+    (2, 8),
+    (7, 4),
+    (6, 2),
+    (4, 2),
+    (4, 5),
+    (3, 9),
+    (5, 6),
+    (4, 8),
+    (3, 6),
+    (5, 3),
+    (8, 2),
+    (5, 9),
+    (9, 1),
+    (8, 5),
+    (1, 2),
+    (2, 1),
+    (2, 7),
+    (6, 1),
+    (6, 4),
+    (7, 3),
+    (7, 6),
+    (3, 2),
+    (4, 1),
+    (3, 8),
+    (8, 4),
+    (8, 1),
+    (5, 8),
+    (8, 7),
+    (9, 6),
+    (1, 4),
+    (2, 3),
+    (1, 7),
+    (2, 6),
+    (7, 2),
+    (6, 3),
+    (6, 9),
+    (7, 8);

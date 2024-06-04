@@ -39,8 +39,13 @@ var (
 )
 
 var (
+	ErrEmailsNotSelected = errors.New("couldn't select emails of notifications recipients")
+)
+
+var (
 	ErrNilContext      = errors.New("context is nil")
 	ErrUserIDMissing   = errors.New("user ID is missing from context")
 	ErrUsernameMissing = errors.New("username is missing from context")
 	ErrParamMissing    = errors.New("one or more required parameters are missing from context")
+	ErrLoggerMissing   = errors.New("logger missing from context")
 )
