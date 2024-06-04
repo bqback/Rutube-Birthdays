@@ -1,0 +1,161 @@
+basePath: /
+definitions:
+  dto.LoginInfo:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.SignupInfo:
+    properties:
+      dob:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  entities.User:
+    properties:
+      dob:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      surname:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: Никита Архаров
+  description: 'Тестовое задание: Бэкенд-сервер для учёта дней рождения'
+  title: Rutube Birthdays
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные для авторизации
+        in: body
+        name: loginInfo
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginInfo'
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Авторизоваться
+      tags:
+      - Авторизация
+  /auth/signup:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные для регистрации
+        in: body
+        name: signupInfo
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SignupInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.User'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Зарегистрироваться
+      tags:
+      - Авторизация
+  /user:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entities.User'
+            type: array
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      summary: Получить список пользователей
+      tags:
+      - Пользователи
+  /user/{id}/subscribe:
+    post:
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      summary: Подписаться на день рождения пользователя
+      tags:
+      - Пользователи
+  /user/{id}/unsubscribe:
+    post:
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      summary: Отписаться от дня рождения пользователя
+      tags:
+      - Пользователи
+securityDefinitions:
+  JWT:
+    in: header
+    name: '"Authorization"'
+    type: apiKey
+swagger: "2.0"

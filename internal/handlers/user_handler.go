@@ -26,11 +26,11 @@ type UserHandler struct {
 // @Security JWT
 //
 // @Success 200 {object} []entities.User
-// @Failure 400  {object}  httputil.HTTPError
-// @Failure 401  {object}  httputil.HTTPError
-// @Failure 500  {object}  httputil.HTTPError
+// @Failure 400
+// @Failure 401
+// @Failure 500
 //
-// @Router /auth/signup [post]
+// @Router /user [get]
 func (uh *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -74,6 +74,20 @@ func (uh *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	r.Body.Close()
 }
 
+// @Summary Подписаться на день рождения пользователя
+// @Description
+// @Tags Пользователи
+//
+// @Param id path uint true "ID пользователя"
+//
+// @Security JWT
+//
+// @Success 200
+// @Failure 400
+// @Failure 409
+// @Failure 500
+//
+// @Router /user/{id}/subscribe [post]
 func (uh *UserHandler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -133,6 +147,19 @@ func (uh *UserHandler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	r.Body.Close()
 }
 
+// @Summary Отписаться от дня рождения пользователя
+// @Description
+// @Tags Пользователи
+//
+// @Param id path uint true "ID пользователя"
+//
+// @Security JWT
+//
+// @Success 200
+// @Failure 400
+// @Failure 500
+//
+// @Router /user/{id}/unsubscribe [post]
 func (uh *UserHandler) Unsubscribe(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 

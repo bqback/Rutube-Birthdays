@@ -11,7 +11,7 @@ if [ -f "config/.env" ]; then
     echo ".env file found"
 else 
     echo ".env file not found, creating"
-    echo "MIGRATOR_USER=\"$2\"" >> config/.env 
+    echo "MIGRATOR_USER=\"$1\"" >> config/.env 
     echo "MIGRATOR_PASSWORD=\"$2\"" >> config/.env 
     echo "POSTGRES_USER=\"$3\"" >> config/.env
     echo "POSTGRES_PASSWORD=\"$4\"" >> config/.env

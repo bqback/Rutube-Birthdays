@@ -30,6 +30,7 @@ const configPath = "config/config.yml"
 // @description     Тестовое задание: Бэкенд-сервер для учёта дней рождения
 
 // @contact.name   Никита Архаров
+// @contact.email  lolwut-lol@yandex.ru
 
 // @host      localhost:8080
 // @BasePath  /

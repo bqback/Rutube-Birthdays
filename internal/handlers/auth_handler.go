@@ -27,9 +27,9 @@ type AuthHandler struct {
 // @Param loginInfo body dto.LoginInfo true "Данные для авторизации"
 //
 // @Header 200  {string}  "Bearer token"
-// @Failure 400  {object}  httputil.HTTPError
-// @Failure 401  {object}  httputil.HTTPError
-// @Failure 500  {object}  httputil.HTTPError
+// @Failure 400
+// @Failure 401
+// @Failure 500
 //
 // @Router /auth/login [post]
 func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
@@ -75,9 +75,9 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 //
 // @Header 200  {string}  "Bearer token"
 // @Success 200 {object} entities.User
-// @Failure 400  {object}  httputil.HTTPError
-// @Failure 401  {object}  httputil.HTTPError
-// @Failure 500  {object}  httputil.HTTPError
+// @Failure 400
+// @Failure 401
+// @Failure 500
 //
 // @Router /auth/signup [post]
 func (ah *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
