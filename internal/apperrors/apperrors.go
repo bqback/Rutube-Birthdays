@@ -33,8 +33,9 @@ var (
 )
 
 var (
-	ErrSubscriptionNotCreated = errors.New("failed to subscribe to birthday")
-	ErrSubscriptionNotDeleted = errors.New("failed to unsubscribe from birthday")
+	ErrSubscriptionNotCreated    = errors.New("failed to subscribe to birthday")
+	ErrSubscriptionNotDeleted    = errors.New("failed to unsubscribe from birthday")
+	ErrSubscriptionAlreadyExists = errors.New("subscription already exists")
 )
 
 var (

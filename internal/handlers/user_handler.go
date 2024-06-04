@@ -124,6 +124,8 @@ func (uh *UserHandler) Subscribe(w http.ResponseWriter, r *http.Request) {
 	case nil:
 		w.WriteHeader(http.StatusOK)
 		oplog.Info("Subscribed")
+	case apperrors.ErrSubscriptionAlreadyExists:
+		RespondError(http.StatusConflict, w, ctx)
 	default:
 		RespondError(http.StatusInternalServerError, w, ctx)
 	}

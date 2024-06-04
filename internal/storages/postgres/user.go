@@ -5,10 +5,12 @@ import (
 	"birthdays/internal/pkg/dto"
 	"birthdays/internal/pkg/entities"
 	"context"
+	"errors"
 	"log/slog"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/go-chi/httplog/v2"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -72,6 +74,13 @@ func (s *PgUserStorage) Subscribe(ctx context.Context, source uint64, id uint64)
 	_, err = s.db.Exec(query, args...)
 	if err != nil {
 		oplog.Debug("Notification subscription insert failed", "err", err.Error())
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == "23505" {
+				oplog.Debug("Returning conflict")
+				return apperrors.ErrSubscriptionAlreadyExists
+			}
+		}
 		return apperrors.ErrSubscriptionNotCreated
 	}
 	oplog.Debug("Subscribed to birthday")
