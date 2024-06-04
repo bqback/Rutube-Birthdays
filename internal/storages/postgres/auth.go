@@ -4,7 +4,6 @@ import (
 	"birthdays/internal/apperrors"
 	"birthdays/internal/pkg/dto"
 	"birthdays/internal/pkg/entities"
-	"birthdays/internal/utils"
 	"context"
 	"database/sql"
 	"log/slog"
@@ -24,17 +23,15 @@ func NewAuthStorage(db *sqlx.DB) *PgAuthStorage {
 	}
 }
 
-func (s *PgAuthStorage) Auth(ctx context.Context, info dto.LoginInfo) (*dto.DBUser, error) {
-	httplog.LogEntrySetFields(ctx, map[string]interface{}{
-		dto.StepKey: slog.StringValue(step),
-		dto.FuncKey: slog.StringValue("Auth"),
-	})
+func (s *PgAuthStorage) GetByUsername(ctx context.Context, username string) (*dto.DBUser, error) {
+	httplog.LogEntrySetField(ctx, dto.StepKey, slog.StringValue(step))
+	httplog.LogEntrySetField(ctx, dto.FuncKey, slog.StringValue("GetByUsername"))
 	oplog := httplog.LogEntry(ctx)
 
 	query, args, err := squirrel.
 		Select(authLoginSelectFields...).
 		From(authTable).
-		Where(squirrel.Eq{authLoginField: info.Username}).
+		Where(squirrel.Eq{authUsernameField: username}).
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
@@ -53,21 +50,12 @@ func (s *PgAuthStorage) Auth(ctx context.Context, info dto.LoginInfo) (*dto.DBUs
 	}
 	oplog.Debug("User selected")
 
-	err = utils.ComparePasswords(user.PasswordHash, info.Password)
-	if err != nil {
-		oplog.Debug("Passwords don't match", "err", err.Error())
-		return nil, apperrors.ErrWrongPassword
-	}
-	oplog.Debug("Passwords match")
-
 	return &user, nil
 }
 
-func (s *PgAuthStorage) Register(ctx context.Context, info dto.SignupInfo) (*entities.User, error) {
-	httplog.LogEntrySetFields(ctx, map[string]interface{}{
-		dto.StepKey: slog.StringValue(step),
-		dto.FuncKey: slog.StringValue("Register"),
-	})
+func (s *PgAuthStorage) Create(ctx context.Context, info dto.SignupInfo) (*entities.User, error) {
+	httplog.LogEntrySetField(ctx, dto.StepKey, slog.StringValue(step))
+	httplog.LogEntrySetField(ctx, dto.FuncKey, slog.StringValue("Register"))
 	oplog := httplog.LogEntry(ctx)
 
 	tx, err := s.db.Begin()

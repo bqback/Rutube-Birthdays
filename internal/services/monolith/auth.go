@@ -21,16 +21,15 @@ type AuthJWTService struct {
 func NewAuthJWTService(storage storages.IAuthStorage, manager *auth.AuthManager) *AuthJWTService {
 	return &AuthJWTService{
 		storage: storage,
+		manager: manager,
 	}
 }
 
 func (s *AuthJWTService) Auth(ctx context.Context, info dto.LoginInfo) (*entities.JWT, error) {
-	httplog.LogEntrySetFields(ctx, map[string]interface{}{
-		dto.StepKey: slog.StringValue(step),
-	})
+	httplog.LogEntrySetField(ctx, dto.StepKey, slog.StringValue(step))
 	oplog := httplog.LogEntry(ctx)
 
-	user, err := s.storage.Auth(ctx, info)
+	user, err := s.storage.GetByUsername(ctx, info.Username)
 	if err != nil {
 		return nil, err
 	}
@@ -43,6 +42,7 @@ func (s *AuthJWTService) Auth(ctx context.Context, info dto.LoginInfo) (*entitie
 
 	token, err := s.manager.GenerateToken(&dto.TokenInfo{ID: user.ID, Username: info.Username})
 	if err != nil {
+		oplog.Error("Error generating token", "err", err.Error())
 		return nil, err
 	}
 	oplog.Debug("Token generated")
@@ -56,13 +56,23 @@ func (s *AuthJWTService) Auth(ctx context.Context, info dto.LoginInfo) (*entitie
 }
 
 func (s *AuthJWTService) Register(ctx context.Context, info dto.SignupInfo) (*dto.SignupResponse, error) {
-	httplog.LogEntrySetFields(ctx, map[string]interface{}{
-		dto.StepKey: slog.StringValue(step),
-		dto.FuncKey: slog.StringValue("Register"),
-	})
+	httplog.LogEntrySetField(ctx, dto.StepKey, slog.StringValue(step))
+	httplog.LogEntrySetField(ctx, dto.FuncKey, slog.StringValue("Register"))
 	oplog := httplog.LogEntry(ctx)
 
-	user, err := s.storage.Register(ctx, info)
+	_, err := s.storage.GetByUsername(ctx, info.Username)
+	if err == nil {
+		return nil, apperrors.ErrUsernameTaken
+	}
+	oplog.Debug("User doesn't exist")
+
+	info.Password, err = utils.HashFromPassword(info.Password)
+	if err != nil {
+		oplog.Error("Error hashing password", "err", err.Error())
+		return nil, err
+	}
+
+	user, err := s.storage.Create(ctx, info)
 	if err != nil {
 		return nil, err
 	}
@@ -70,6 +80,7 @@ func (s *AuthJWTService) Register(ctx context.Context, info dto.SignupInfo) (*dt
 
 	token, err := s.manager.GenerateToken(&dto.TokenInfo{ID: user.ID, Username: info.Username})
 	if err != nil {
+		oplog.Error("Error generating token", "err", err.Error())
 		return nil, err
 	}
 	oplog.Debug("Token generated")

@@ -13,7 +13,7 @@ type LoginInfo struct {
 type DBUser struct {
 	ID           uint64
 	Username     string
-	PasswordHash string
+	PasswordHash string `db:"password_hash"`
 }
 
 type TokenInfo struct {

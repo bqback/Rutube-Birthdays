@@ -26,19 +26,17 @@ type AuthHandler struct {
 //
 // @Param loginInfo body dto.LoginInfo true "Данные для авторизации"
 //
-// @Success 200  {object}  dto.JWT "JWT-токен"
-// @Failure 400  {object}  apperrors.ErrorResponse
-// @Failure 401  {object}  apperrors.ErrorResponse
-// @Failure 500  {object}  apperrors.ErrorResponse
+// @Header 200  {string}  "Bearer token"
+// @Failure 400  {object}  httputil.HTTPError
+// @Failure 401  {object}  httputil.HTTPError
+// @Failure 500  {object}  httputil.HTTPError
 //
-// @Router /auth/ [post]
+// @Router /auth/login [post]
 func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	httplog.LogEntrySetFields(ctx, map[string]interface{}{
-		dto.StepKey: slog.StringValue(step),
-		dto.FuncKey: slog.StringValue("Auth"),
-	})
+	httplog.LogEntrySetField(ctx, dto.StepKey, slog.StringValue(step))
+	httplog.LogEntrySetField(ctx, dto.FuncKey, slog.StringValue("Auth"))
 	oplog := httplog.LogEntry(ctx)
 
 	var info dto.LoginInfo
@@ -57,7 +55,7 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		RespondError(http.StatusUnauthorized, w, ctx)
 	case nil:
 		w.Header().Set("Authorization", "Bearer "+token.Token)
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusNoContent)
 		oplog.Info("User authorized", dto.UserKey, token.User)
 	default:
 		RespondError(http.StatusInternalServerError, w, ctx)
@@ -66,7 +64,51 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	r.Body.Close()
 }
 
+// @Summary Зарегистрироваться
+// @Description
+// @Tags Авторизация
+//
+// @Accept  json
+// @Produce  json
+//
+// @Param signupInfo body dto.SignupInfo true "Данные для регистрации"
+//
+// @Header 200  {string}  "Bearer token"
+// @Success 200 {object} entities.User
+// @Failure 400  {object}  httputil.HTTPError
+// @Failure 401  {object}  httputil.HTTPError
+// @Failure 500  {object}  httputil.HTTPError
+//
+// @Router /auth/signup [post]
 func (ah *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	httplog.LogEntrySetField(ctx, dto.StepKey, slog.StringValue(step))
+	httplog.LogEntrySetField(ctx, dto.FuncKey, slog.StringValue("Signup"))
+	oplog := httplog.LogEntry(ctx)
+
+	var info dto.SignupInfo
+	err := json.NewDecoder(r.Body).Decode(&info)
+	if err != nil {
+		oplog.Error("Failed to decode request", "err", err.Error())
+		RespondError(http.StatusBadRequest, w, ctx)
+	}
+	oplog.Debug("Request decoded")
+
+	response, err := ah.as.Register(ctx, info)
+	switch err {
+	case apperrors.ErrUsernameTaken:
+		RespondError(http.StatusConflict, w, ctx)
+	case nil:
+		w.Header().Set("Authorization", "Bearer "+response.Token)
+		json.NewEncoder(w).Encode(response.User)
+		w.WriteHeader(http.StatusOK)
+		oplog.Info("User created", dto.UserKey, response.User)
+	default:
+		RespondError(http.StatusInternalServerError, w, ctx)
+	}
+
+	r.Body.Close()
 
 }
 

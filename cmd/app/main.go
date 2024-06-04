@@ -31,7 +31,7 @@ func main() {
 	}
 	log.Println(time.Now(), "Config loaded")
 
-	loggers, err := logging.Setup(config)
+	logger, err := logging.Setup(config.Logging)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -48,7 +48,7 @@ func main() {
 	services := services.NewServices(storages, authManager)
 	handlers := handlers.NewHandlers(services)
 
-	mux, err := mux.SetUpMux(handlers, loggers.HTTP)
+	mux, err := mux.SetUpMux(handlers, logger)
 	if err != nil {
 		log.Fatal(err.Error())
 	}

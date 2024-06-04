@@ -28,5 +28,12 @@ var (
 var (
 	ErrUserNotCreated  = errors.New("failed to create user")
 	ErrUserNotSelected = errors.New("failed to select user")
+	ErrUsernameTaken   = errors.New("username taken")
 	ErrWrongPassword   = errors.New("wrong password")
+)
+
+var (
+	ErrNilContext      = errors.New("context is nil")
+	ErrUserIDMissing   = errors.New("user ID is missing from context")
+	ErrUsernameMissing = errors.New("username is missing from context")
 )

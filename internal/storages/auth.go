@@ -7,6 +7,6 @@ import (
 )
 
 type IAuthStorage interface {
-	Auth(context.Context, dto.LoginInfo) (*dto.DBUser, error)
-	Register(context.Context, dto.SignupInfo) (*entities.User, error)
+	Create(context.Context, dto.SignupInfo) (*entities.User, error)
+	GetByUsername(context.Context, string) (*dto.DBUser, error)
 }
