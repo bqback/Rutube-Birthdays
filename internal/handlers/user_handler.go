@@ -64,7 +64,10 @@ func (uh *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	case apperrors.ErrEmptyResult:
 		fallthrough
 	case nil:
-		json.NewEncoder(w).Encode(users)
+		err = json.NewEncoder(w).Encode(users)
+		if err != nil {
+			RespondError(http.StatusInternalServerError, w, ctx)
+		}
 		w.WriteHeader(http.StatusOK)
 		oplog.Info("User list sent")
 	default:

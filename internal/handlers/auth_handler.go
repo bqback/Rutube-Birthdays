@@ -101,7 +101,10 @@ func (ah *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 		RespondError(http.StatusConflict, w, ctx)
 	case nil:
 		w.Header().Set("Authorization", "Bearer "+response.Token)
-		json.NewEncoder(w).Encode(response.User)
+		err = json.NewEncoder(w).Encode(response.User)
+		if err != nil {
+			RespondError(http.StatusInternalServerError, w, ctx)
+		}
 		w.WriteHeader(http.StatusOK)
 		oplog.Info("User created", dto.UserKey, response.User)
 	default:

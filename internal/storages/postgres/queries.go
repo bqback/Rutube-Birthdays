@@ -5,11 +5,11 @@ var returningIDSuffix = "RETURNING id"
 var authTable = "public.auth"
 
 // public.auth fields
-var (
-	publicAuthIdField       = "public.auth.id"
-	publicAuthUsernameField = "public.auth.username"
-	publicAuthHashField     = "public.auth.password_hash"
-)
+// var (
+// 	publicAuthIdField       = "public.auth.id"
+// 	publicAuthUsernameField = "public.auth.username"
+// 	publicAuthHashField     = "public.auth.password_hash"
+// )
 
 // internal public.auth fields
 var (
@@ -26,13 +26,13 @@ var (
 var userTable = "public.user"
 
 // public.user fields
-var (
-	publicUserIdField      = "public.user.id_user"
-	publicUserNameField    = "public.user.name"
-	publicUserSurnameField = "public.user.surname"
-	publicUserEmailField   = "public.user.email"
-	publicUserDOBField     = "public.user.dob"
-)
+// var (
+// 	publicUserIdField      = "public.user.id_user"
+// 	publicUserNameField    = "public.user.name"
+// 	publicUserSurnameField = "public.user.surname"
+// 	publicUserEmailField   = "public.user.email"
+// 	publicUserDOBField     = "public.user.dob"
+// )
 
 // internal public.user fields
 var (

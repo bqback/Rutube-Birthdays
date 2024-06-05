@@ -99,7 +99,10 @@ func main() {
 	// Create a deadline to wait for.
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
-	server.Shutdown(ctx)
+	err = server.Shutdown(ctx)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 	// Optionally, you could run srv.Shutdown in a goroutine and block on
 	// <-ctx.Done() if your application should wait for other services
 	// to finalize based on context cancellation.
