@@ -271,6 +271,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "Тестовое задание: Бэкенд-сервер для учёта дней рождения",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

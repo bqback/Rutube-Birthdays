@@ -38,7 +38,7 @@ runs:
     - name: "Build .env file"
       shell: bash
       run: |
-        echo "MIGRATOR_USER=\"${{ inputs.migrator_user }}\"" >> ${{ inputs.location }}/.env
+        echo "MIGRATOR_USER=\"${{ inputs.migrator_user }}\"" >> ${{ inputs.location }}.env
         echo "MIGRATOR_PASSWORD=\"${{ inputs.migrator_pw }}\"" >> ${{ inputs.location }}.env
         echo "POSTGRES_USER=\"${{ inputs.postgres_user }}\"" >> ${{ inputs.location }}.env
         echo "POSTGRES_PASSWORD=\"${{ inputs.postgres_pw }}\"" >> ${{ inputs.location }}.env
